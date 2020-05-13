@@ -1,0 +1,10 @@
+# Mastermind Rules
+# There are total of 6 "colors".
+# "Codemaker" make a "color" combination "code" with length of 4, with duplicates of same color allowed.
+# "Codebreaker" must guess within x turns, where x can vary depending on difficulty. (Must be even)
+# Based on the guess made by the "codebreaker", the "codemaker" must grade the guess with following
+## Mark correct color in correct place with a "colored" peg -> will use filled circle
+## Mark correct color in incorrect place with a "uncolored" peg -> will use unfilled circle
+## Mark incorrect color with no peg -> will use a full-width X
+# For cases of duplicate color on the code, the # of colors precedes whether or not color exists
+## For example, if code is "AABB" and guess is "AABC", then you only award the guess 1 filled circle for B, even though answer contains 2 Bs.
