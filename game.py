@@ -17,8 +17,20 @@ def mm():
     print(code)
 
     # Max guess
-    ## Guess count set to 12 max. May want to add variable length in the future.
-    max_guess = 12
+    ## Guess count set to 12 max, with difficulty scale from 0-3 reducing guess count by 2 per unit increment.
+    difficulty_set = False
+    while not difficulty_set:
+        d = input("Select difficulty (0-3 with 0 as easiest): ")
+        try:
+            if float(d) in [0,1,2,3]:
+                difficulty_set = True
+                max_guess = 12 - int(d)*2
+                print (f"Difficulty {int(d)} chosen.")
+                print (f"You will have {max_guess} attempts to crack the code.")
+            else: 
+                print ('Incorrect value given.')
+        except:
+            print('Incorrect value given.')
 
     # Input loops for game
     for i in range(max_guess):
@@ -31,11 +43,12 @@ def mm():
 
         while not check_len or not check_elem:
             ## Take input of 4 letters within code range, case insensitive
-            guess = list(input("Make a guess.\n"))
+            guess = list(input("Make a guess: "))
             check_len = len(guess) == 4
             check_elem = all(str.upper(i) in code_range for i in guess)
             
             ## Reject and ask for input again if above is not met.
+            ## Might want to create condition to allow players to review their previous guesses.
             if not check_len and not check_elem:
                 print("Wrong length and element(s). Guess must be 4 letters long, with all letters between A-F.")
             elif not check_len:
@@ -63,10 +76,18 @@ def mm():
         else:
             pass
     
+    # Output win/loss prompt
     if checker == [2,2,2,2]:
         print("Congratulations. You found the correct answer!")
     else:
         print(f"You lose! The correct answer was {''.join(code)}.")
-        
-    ## Need to add prompt to ask player if they want to play again.
+
+    # Ask if player wants to play again.
+    again = input("Play again? ['y' to play again.]: ")
+
+    if str.lower(again) == 'y':
+        mm()
+    else:
+        print("Thanks for playing!")
+
 mm()
