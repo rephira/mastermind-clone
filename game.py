@@ -29,9 +29,9 @@ def mm():
         ## Print attempt number
         print(f"Attempt #{i+1}")
 
-        while not check_len and not check_elem:
+        while not check_len or not check_elem:
             ## Take input of 4 letters within code range, case insensitive
-            guess = list(input("Make a guess."))
+            guess = list(input("Make a guess.\n"))
             check_len = len(guess) == 4
             check_elem = all(str.upper(i) in code_range for i in guess)
             
@@ -51,7 +51,22 @@ def mm():
             elif str.upper(a) in code:
                 checker[i] += 1
 
-        ## Print comparison result
-        ### Raw print of checker for now. Need to replace with prettier output later.
-        print(checker)
+        ## Print comparison result, prettied. Probably should build a function for this?
+        comparison = []
+        pegs = ["◌","○","●"] #apparently some full width symbols are not welcome on the terminal?
+        for b in checker:
+            comparison.append(pegs[b])
+        print(f"Result: {''.join(comparison)}")
+
+        if checker == [2,2,2,2]:
+            break
+        else:
+            pass
+    
+    if checker == [2,2,2,2]:
+        print("Congratulations. You found the correct answer!")
+    else:
+        print(f"You lose! The correct answer was {''.join(code)}.")
+        
+    ## Need to add prompt to ask player if they want to play again.
 mm()
