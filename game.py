@@ -13,9 +13,6 @@ def mm():
     for i in range(4):
         code.append(code_range[randint(0,5)])
 
-    # FOR TESTING PURPOSES! DELETE THIS WHEN FINISHED!
-    print(code)
-
     # Max guess
     ## Guess count set to 12 max, with difficulty scale from 0-3 reducing guess count by 2 per unit increment.
     difficulty_set = False
@@ -33,6 +30,7 @@ def mm():
             print('Incorrect value given.')
 
     # Input loops for game
+    guess_tracker = []
     for i in range(max_guess):
         
         check_len = False
@@ -43,32 +41,27 @@ def mm():
 
         while not check_len or not check_elem:
             ## Take input of 4 letters within code range, case insensitive
-            guess = list(input("Make a guess: "))
+            guess = list(input("Make a guess [type 'guess' to see your guesses so far]: "))
             check_len = len(guess) == 4
             check_elem = all(str.upper(i) in code_range for i in guess)
             
             ## Reject and ask for input again if above is not met.
-            ## Might want to create condition to allow players to review their previous guesses.
-            if not check_len and not check_elem:
-                print("Wrong length and element(s). Guess must be 4 letters long, with all letters between A-F.")
+            if str.lower(''.join(guess)) == "guess":
+                print("Your guesses and results so far\n")
+                for i in range(len(guess_tracker)):
+                    r = guess_check(guess_tracker[i],code)[0]
+                    print(f"{i+1}: {''.join(guess_tracker[i])}---{''.join(r)}")
+            elif not check_len and not check_elem:
+                    print("Wrong length and element(s). Guess must be 4 letters long, with all letters between A-F.")
             elif not check_len:
                 print("Wrong length. Guess must be 4 letters long, with all letters between A-F.")
             elif not check_elem:
                 print("Wrong element(s). Guess must be 4 letters long, with all letters between A-F.")
         
-        ## Compare guess to code answer.
-        checker = [0,0,0,0]
-        for i,a in enumerate(guess):
-            if str.upper(a) == code[i]:
-                checker[i] += 2
-            elif str.upper(a) in code:
-                checker[i] += 1
+        ## Add current guess to guess_tracker
+        guess_tracker.append(guess)
 
-        ## Print comparison result, prettied. Probably should build a function for this?
-        comparison = []
-        pegs = ["◌","○","●"] #apparently some full width symbols are not welcome on the terminal?
-        for b in checker:
-            comparison.append(pegs[b])
+        comparison, checker = guess_check(guess,code)
         print(f"Result: {''.join(comparison)}")
 
         if checker == [2,2,2,2]:
@@ -89,5 +82,21 @@ def mm():
         mm()
     else:
         print("Thanks for playing!")
+
+def guess_check(g,c):
+    ## Compare guess to code answer.
+    ch = [0,0,0,0]
+    for i,a in enumerate(g):
+        if str.upper(a) == c[i]:
+            ch[i] += 2
+        elif str.upper(a) in c: ##NEED TO FIX THIS PART. IT IS ATTACHING SINGLE OCCURRENCE TO MULTIPLE RESULT.
+            ch[i] += 1
+
+    ## Print comparison result, prettied. Probably should build a function for this?
+    comp = []
+    pegs = ["◌","○","●"] #apparently some full width symbols are not welcome on the terminal?
+    comp = [pegs[i] for i in sorted(ch,reverse=True)]
+
+    return [comp, ch]
 
 mm()
